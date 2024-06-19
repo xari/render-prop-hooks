@@ -1,46 +1,38 @@
-# Getting Started with Create React App
+# Components that render library components should be as minimalist as possible.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- Borrow prop typing from the library component.
 
-## Available Scripts
+# Priorities....?
 
-In the project directory, you can run:
+- Accessibility!
+- Stability
+- Maintainability(?)
 
-### `npm start`
+# Why these patterns are important
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Development becomes increasingly about framework/libary integration (glueing other developers bullshit together). In light of this, maintenance of the codebase will be easier if we learn how to integrate in a way that prioritizes simplicity....(?)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+What is simplicity?
 
-### `npm test`
+- Less CSS (but still actual CSS, instead of Tailwind, etc.)
+- Smaller components that are targeted in their scope.
+  - What's a targeted component?
+- Smaller functions
+  - Easier to test (if testing is a requirement)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## StyledTableWithRowSelectionAndInlineButtons
 
-### `npm run build`
+As we increase the complexity of the combinations, we'll need to use a few techniques to avoid the need for messy CSS and the risk of inaccessible markup.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Render-props for inline rendering.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Rather than having `WithRowSelection` render the button itself, what if we modify WithRowSelection to return the button (so that the parent component can have full control over where it gets rendered).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Why does this matter?
 
-### `npm run eject`
+Less complex CSS. No more need for absolute postitioning.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Hooks vs. Render Props
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Visibility
+  - Using a hook

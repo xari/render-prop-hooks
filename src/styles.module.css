@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wrapper > div {
+  border: solid black 1px;
+}
+
+.relativeWrapper {
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.relativeWrapper button {
+  position: absolute;
+  bottom: 5px;
+}
+
+.buttonLeft {
+  left: 5px;
+}
+
+.buttonRight {
+  right: 5px;
+}
