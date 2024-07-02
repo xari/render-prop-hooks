@@ -6,148 +6,133 @@ import { BaseTable, StyledTable } from "./simple";
 import { RowSelectionProps, TableData } from "./types";
 import styles from "../styles.module.css";
 
-type RenderProp = (
-  rowSelection: TableRowSelection<TableData>,
-  clearSelectedRows?: () => void,
-) => ReactNode;
+// What now?
+// We know how to use multiple
+// features/hooks in a single component.
+// What about rendering custom markup?
 
-type RenderPropWithReturnedButton = (
-  rowSelection: TableRowSelection<TableData>,
-  clearSelectedRows: () => void,
-  logSelectedRowsButton: ReactNode,
-) => ReactNode;
+import { useExpandable, useRowSelection, useTableStyles } from "./2d";
 
-function WithRowSelection({
-  children,
-}: RowSelectionProps & {
-  children: RenderProp;
-}) {
-  const [selectedRows, setSelectedRows] = useState<Array<TableData>>([]);
+// "The Media Object pattern is:
+// image thingy on the left,
+// heading and text on the right."
+// - https://css-tricks.com/media-object-bunch-ways/
 
-  const selectedRowKeys = selectedRows.map(({ key }) => key);
-
-  const rowSelection: RowSelectionProps = {
-    selectedRowKeys,
-    onChange: (_keys, rows) => setSelectedRows(rows),
-    type: "checkbox",
-  };
-
-  return <>{children(rowSelection)}</>; // Why do we need the Fragment?
+function MediaObject({
+	media,
+	heading,
+	text,
+}: Record<"media" | "heading" | "text", ReactNode>) {
+	return (
+		<div className="flex">
+			{media}
+			<div className="flex flex-col">
+				{heading}
+				{text}
+			</div>
+		</div>
+	);
 }
 
-function WithRowSelectionAndButtons({
-  children,
-  buttonProps,
-}: RowSelectionProps & {
-  children: RenderProp;
-  buttonProps: { onClick: (rowSelection: RowSelectionProps) => void };
-}) {
-  const [selectedRows, setSelectedRows] = useState<Array<TableData>>([]);
+function TableObject() {
+	const expandable = useExpandable();
+	const rowSelection = useRowSelection();
 
-  const clearSelectedRows = () => setSelectedRows([]);
+	const table = useTableStyles(
+		<BaseTable
+			expandable={expandable}
+			rowSelection={rowSelection}
+		/>
+	);
 
-  const selectedRowKeys = selectedRows.map(({ key }) => key);
+	const heading = "My table object";
+	const text = "Pretty sweet, huh?";
 
-  const rowSelection: RowSelectionProps = {
-    selectedRowKeys,
-    onChange: (_keys, rows) => setSelectedRows(rows),
-    type: "checkbox",
-  };
-
-  return (
-    <div className={styles.relativeWrapper}>
-      {children(rowSelection, clearSelectedRows)}
-
-      <button
-        className={styles.buttonRight}
-        onClick={() => buttonProps.onClick(rowSelection)}
-      >
-        Log selected rows
-      </button>
-    </div>
-  );
+	return <MediaObject media={table} heading={heading} text={text} />;
 }
 
-function _TableWithRowSelection() {
-  return (
-    <WithRowSelection>
-      {(rowSelection) => <BaseTable rowSelection={rowSelection} />}
-    </WithRowSelection>
-  );
+// But why not make the `text` section simply use the `children` prop?
+
+function MediaObjectWithChildren({
+	media,
+	heading,
+	children,
+}: Record<"media" | "heading" | "children", ReactNode>) {
+	return (
+		<div className="flex">
+			{media}
+			<div className="flex flex-col">
+				{heading}
+				{children}
+			</div>
+		</div>
+	);
 }
 
-function _StyledTableWithRowSelection() {
-  return (
-    <WithRowSelectionAndButtons
-      buttonProps={{
-        onClick: ({ selectedRowKeys }) => console.log(selectedRowKeys),
-      }}
-    >
-      {(rowSelection, clearSelectedRows) => (
-        <div className={styles.relativeWrapper}>
-          <StyledTable rowSelection={rowSelection} />
+function TableObject2ElectricBoogaloo() {
+	const expandable = useExpandable();
+	const rowSelection = useRowSelection();
 
-          <button className={styles.buttonLeft} onClick={clearSelectedRows}>
-            Clear selection
-          </button>
-        </div>
-      )}
-    </WithRowSelectionAndButtons>
-  );
+	const table = useTableStyles(
+		<BaseTable
+			expandable={expandable}
+			rowSelection={rowSelection}
+		/>
+	);
+
+	const media = (
+		<img src="https://appenzellerbier.ch/bundles/scherrermediengmbhcontaolochertheme/theme22/icons/logo-embleme.svg" />
+	);
+	const heading = "Production by month";
+
+	return (
+		<MediaObjectWithChildren media={media} heading={heading}>
+			{table}
+		</MediaObjectWithChildren>
+	);
 }
 
-function WithRowSelectionAndReturnedButton({
-  children,
-  buttonProps,
-}: RowSelectionProps & {
-  children: RenderPropWithReturnedButton;
-  buttonProps: { onClick: (rowSelection: RowSelectionProps) => void };
-}) {
-  const [selectedRows, setSelectedRows] = useState<Array<TableData>>([]);
+// So what's the big deal?
 
-  const clearSelectedRows = () => setSelectedRows([]);
-
-  const selectedRowKeys = selectedRows.map(({ key }) => key);
-
-  const rowSelection: RowSelectionProps = {
-    selectedRowKeys,
-    onChange: (_keys, rows) => setSelectedRows(rows),
-    type: "checkbox",
-  };
-
-  return (
-    <div className={styles.relativeWrapper}>
-      {children(
-        rowSelection,
-        clearSelectedRows,
-        <button
-          className={styles.buttonRight}
-          onClick={() => buttonProps.onClick(rowSelection)}
-        >
-          Log selected rows
-        </button>,
-      )}
-    </div>
-  );
+function BrewingHighlights() {
+	return (
+		<MediaObjectWithChildren
+			media="https://appenzellerbier.ch/assets/images/8/Dachmarke_1440x600-68340991.png"
+			heading="UI Inception"
+		>
+			{<TableObject2ElectricBoogaloo />}
+		</MediaObjectWithChildren>
+	);
 }
 
-export function StyledTableWithRowSelectionAndInlineButtons() {
-  return (
-    <WithRowSelectionAndReturnedButton
-      buttonProps={{
-        onClick: ({ selectedRowKeys }) => console.log(selectedRowKeys),
-      }}
-    >
-      {(rowSelection, clearSelectedRows, logSelectedRowsButton) => (
-        <div className={styles.relativeWrapper}>
-          <StyledTable rowSelection={rowSelection} />
+// Or...
 
-          <button className={styles.buttonLeft} onClick={clearSelectedRows}>
-            Clear selection
-          </button>
-          {logSelectedRowsButton}
-        </div>
-      )}
-    </WithRowSelectionAndReturnedButton>
-  );
+function BringingItTogether() {
+	const expandable = useExpandable();
+	const rowSelection = useRowSelection();
+
+	const table = useTableStyles(
+		<BaseTable
+			expandable={expandable}
+			rowSelection={rowSelection}
+		/>
+	);
+
+	return (
+		<MediaObjectWithChildren
+			media="https://appenzellerbier.ch/assets/images/8/Dachmarke_1440x600-68340991.png"
+			heading="UI Inception"
+		>
+			<MediaObjectWithChildren
+				media="https://appenzellerbier.ch/bundles/scherrermediengmbhcontaolochertheme/theme22/icons/logo-embleme.svg"
+				heading="Production by month"
+			>
+				{table}
+			</MediaObjectWithChildren>
+		</MediaObjectWithChildren>
+	);
 }
+
+// "React lets you build user interfaces out of individual pieces called components.
+// Create your own React components like Thumbnail, LikeButton, and Video.
+// Then combine them into entire screens, pages, and apps."
