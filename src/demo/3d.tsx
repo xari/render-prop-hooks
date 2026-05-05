@@ -3,8 +3,7 @@ import { TableRowSelection } from "antd/es/table/interface";
 
 import { BaseTable, StyledTable } from "./simple";
 
-import { RowSelectionProps, TableData } from "./types";
-import styles from "../styles.module.css";
+
 
 // What now?
 // We know how to use multiple
