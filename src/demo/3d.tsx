@@ -1,5 +1,4 @@
-import { ReactNode, useState } from "react";
-import { TableRowSelection } from "antd/es/table/interface";
+import { ReactNode } from "react";
 
 import { BaseTable, StyledTable } from "./simple";
 
@@ -22,7 +21,7 @@ function MediaObject({
 	media,
 	heading,
 	text,
-}: Record<"media" | "heading" | "text", ReactNode>) {
+}: Readonly<Record<"media" | "heading" | "text", ReactNode>>) {
 	return (
 		<div className="flex">
 			{media}
@@ -57,7 +56,7 @@ function MediaObjectWithChildren({
 	media,
 	heading,
 	children,
-}: Record<"media" | "heading" | "children", ReactNode>) {
+}: Readonly<Record<"media" | "heading" | "children", ReactNode>>) {
 	return (
 		<div className="flex">
 			{media}
@@ -81,7 +80,7 @@ function TableObject2ElectricBoogaloo() {
 	);
 
 	const media = (
-		<img src="https://appenzellerbier.ch/bundles/scherrermediengmbhcontaolochertheme/theme22/icons/logo-embleme.svg" />
+		<img src="https://appenzellerbier.ch/bundles/scherrermediengmbhcontaolochertheme/theme22/icons/logo-embleme.svg" alt="Appenzeller Bier logo" />
 	);
 	const heading = "Production by month";
 
