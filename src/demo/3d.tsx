@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { TableRowSelection } from "antd/es/table/interface";
 
-import { BaseTable, StyledTable } from "./simple";
+import { BaseTable } from "./simple";
 
 import { RowSelectionProps, TableData } from "./types";
 import styles from "../styles.module.css";
