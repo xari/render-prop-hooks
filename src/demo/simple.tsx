@@ -25,11 +25,7 @@ export function StyledTable(props: AllowedTableProps) {
 // First: The hook renders the children.
 // Constraint: The hook can only render one thing.
 function useStyledTable(props?: AllowedTableProps) {
-  return (
-    <ConfigProvider theme={theme}>
-      <BaseTable {...props} />
-    </ConfigProvider>
-  );
+  return <StyledTable {...props} />;
 }
 
 // This isn't very helpful, but arguably it might serve to
